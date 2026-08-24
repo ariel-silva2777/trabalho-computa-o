@@ -1,0 +1,207 @@
+import pygame
+import os
+import random
+pygame.init()
+#variaveis globais
+tela_Altura = 600
+tela_Largura = 1100
+tela = pygame.display.set_mode((tela_Largura,tela_Altura))
+
+branco = pygame.Color(255,255,255)
+vermelho = pygame.Color(255,0,0)
+azul = pygame.Color(0,0,255)
+verde = pygame.Color(0,255,0)
+
+#animações
+#base = [  pygame.image.load(os.path.join())  ]
+
+class runner():
+    pos_y = 400
+    pos_x = 310
+    pos_y_abaixado = pos_y + 10
+    veloz_pulo = 8
+    def __init__(self):
+        #sprites
+        #bases
+        #self.NomeDaAnimacao = VariavelQueEstaOCaminhoDaImagem
+        self.correrimg = [vermelho,azul]
+        self.pularimg = [verde]
+        self.abaixarimg = [vermelho,azul]
+        
+        #self.NomeDaAnimacao = True ou False para deixa atia quando inicia o jogo
+        self.correndo = True
+        self.pulando =False
+        self.abaixando = False
+        
+        
+        self.step_index = 0
+        self.velocidade_pulo = self.veloz_pulo
+        self.img = self.correrimg[0]
+        #self.runner_Colision = self.image.get_rect()
+        self.runner_CordY = self.pos_y
+        self.runner_CordX = self.pos_x
+        
+    def pular(self):
+        self.img = self.pularimg[self.step_index//10]
+        #self.runner_Colision = self.image.get_rect()
+        if self.pulando:
+            self.runner_CordY -= self.velocidade_pulo * 4
+            self.velocidade_pulo -= 0.5
+        if self.velocidade_pulo < -self.veloz_pulo:
+            self.velocidade_pulo = self.veloz_pulo
+            self.pulando = False
+        
+    def abaixar(self):
+        self.img = self.abaixarimg[self.step_index//5]
+        #self.runner_Colision = self.image.get_rect()
+        self.runner_CordY = self.pos_y
+        self.runner_CordX = self.pos_x
+        self.step_index +=1
+    def correr(self):
+        self.img = self.correrimg[self.step_index//5]
+        #self.runner_Colision = self.image.get_rect()
+        self.runner_CordY = self.pos_y_abaixado
+        self.runner_CordX = self.pos_x
+        self.step_index +=1
+        
+        
+    def update(self, input):
+        
+        if self.abaixando:
+            self.abaixar()
+            
+        if self.pulando:
+            self.pular()
+            
+        if self.correndo:
+            self.correr()
+            
+            
+            
+            
+        if self.step_index >= 10:
+            self.step_index = 0
+            
+                   
+        if input[pygame.K_UP] and not self.pulando:
+            self.correndo = False
+            
+            self.pulando= True
+            
+            self.abaixando = False
+        elif input[pygame.K_DOWN] and not self.abaixando:
+            self.correndo = False
+            
+            self.pulando = False
+            
+            self.abaixando = True
+        elif not (self.pulando or input[pygame.K_DOWN]):
+            self.correndo = True
+            
+            self.pulando = False
+            
+            self.abaixando = False
+
+
+    def draw(self,tela):
+        pygame.draw.circle(tela, self.img,(self.runner_CordX, self.runner_CordY),40)
+    pass
+
+class objetos_():
+    def __init__(self):
+        self.pos_x = tela_Largura + random.randint(800,1000)
+        self.pos_y = random.randint(50,100)
+        #self.text = 
+        self.width= 50
+        
+    def update(self):
+        self.pos_x -= gamespeed
+        if self.pos_x <self.width:
+            self.pos_x = tela_Largura + random.randint(2500,3000)
+            self.pos_y = random.randint(50,100)
+        
+    def draw(self,tela):
+        pygame.draw.circle(tela,azul,(self.pos_x,self.pos_y),50)
+
+class obstaculos():
+    def __init__(self,imagem,typo):
+        self.textura = imagem
+        self.type = typo
+        self.rect = self.textura[self.type].get_rect()
+        self.rect.x = tela_Largura
+    def update(self):
+        self.pos_x -= gamespeed
+        if self.pos_x <self.width:
+            obstaculos.pop()
+            
+    def draw(self,tela):
+        pygame.draw.circle(tela,azul,(self.pos_x,self.pos_y),50)
+
+class obstaculo_curto(obstaculos):
+    def __init__(self,image):
+        self.type = random.randint(0,2)
+        super().__init__(image,self.type)
+        self.pos_obst_y = 360
+        self.pos_obst_x = tela_Largura
+class obstaculo_longo(obstaculos):
+    def __init__(self,image):
+        self.type = random.randint(0,2)
+        super().__init__(image,self.type)
+        self.pos_obst_y = 360
+        self.pos_obst_x = tela_Largura
+def main ():
+    global gamespeed , pos_x_bg , pos_y_bg, pontos
+    run = True
+    clock = pygame.time.Clock()
+    player = runner()
+    objs = objetos_()
+    obstaculo = obstaculos()
+    gamespeed = 14
+    pos_x_bg = 0
+    pos_y_bg = 400
+    pontos = 0
+    font = pygame.font.Font('freesansbold.ttf', 20)
+    def placar():
+        global pontos, gamespeed
+        pontos += 1
+        if pontos % 100 == 0:
+            gamespeed +=1
+        text = font.render("pontuação: "+str(pontos), True,(0,0,0))
+        textRect = text.get_rect()
+        textRect.center = (1000,40)
+        tela.blit(text,textRect)
+    def background():
+        global pos_x_bg, pos_y_bg
+        bg_width = 400 #usar o metodo get_width para definir isso
+        pygame.draw.rect(tela,verde,(pos_x_bg,pos_y_bg,400,400),)
+        pygame.draw.rect(tela,verde,(pos_x_bg + bg_width ,pos_y_bg,400,400),)
+        if pos_x_bg <= -bg_width:
+            pygame.draw.rect(tela,verde,(pos_x_bg + bg_width ,pos_y_bg,400,400),)
+            pos_x_bg  = 0
+        pos_x_bg -= gamespeed
+        
+        
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            #steps // coisas que acontecem a acada loop do jogo
+        tela.fill(branco)
+        tecla = pygame.key.get_pressed()
+            
+        player.draw(tela)
+        player.update(tecla)
+        objs.draw(tela)
+        objs.update()
+        obstaculo.draw(tela)
+        obstaculo.update()
+        placar()
+        background()
+        pygame.display.update()
+            
+        clock.tick(60)
+    pygame.quit()
+main()
+            
+            
+            
