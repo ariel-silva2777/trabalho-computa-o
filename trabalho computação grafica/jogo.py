@@ -11,8 +11,22 @@ branco = pygame.Color(255,255,255)
 vermelho = pygame.Color(255,0,0)
 azul = pygame.Color(0,0,255)
 verde = pygame.Color(0,255,0)
-
+corredorr = [pygame.image.load("pixil-frame-0.png"),
+pygame.image.load("pixil-frame-1.png"),
+pygame.image.load("pixil-frame-2.png"),
+pygame.image.load("pixil-frame-3.png"),
+pygame.image.load("pixil-frame-4.png"),
+pygame.image.load("pixil-frame-5.png"),
+pygame.image.load("pixil-frame-6.png"),
+pygame.image.load("pixil-frame-7.png"),
+pygame.image.load("pixil-frame-8.png"),
+pygame.image.load("pixil-frame-9.png"),
+pygame.image.load("pixil-frame-10.png"),
+pygame.image.load("pixil-frame-11.png"),]
+chao = pygame.image.load("grama123-atualizada-pixilart.png")
+carro = pygame.image.load("image-removebg-preview.png")
 #animações
+
 #base = [  pygame.image.load(os.path.join())  ]
 
 class runner():
@@ -24,11 +38,11 @@ class runner():
         #sprites
         #bases
         #self.NomeDaAnimacao = VariavelQueEstaOCaminhoDaImagem
-        self.correrimg = [vermelho,azul]
+        self.correrimg = corredorr
         self.pularimg = [verde]
         self.abaixarimg = [vermelho,azul]
         
-        #self.NomeDaAnimacao = True ou False para deixa atia quando inicia o jogo
+        #self.NomeDaAnimacao = True ou False para deixa ativa quando inicia o jogo
         self.correndo = True
         self.pulando =False
         self.abaixando = False
@@ -104,11 +118,12 @@ class runner():
 
 
     def draw(self,tela):
-        pygame.draw.circle(tela, self.img,(self.runner_CordX, self.runner_CordY),40)
+        tela.blit(self.img,(self.runner_CordX, self.runner_CordY))
     pass
 
 class objetos_():
     def __init__(self):
+        self.sprite = carro
         self.pos_x = tela_Largura + random.randint(800,1000)
         self.pos_y = random.randint(50,100)
         #self.text = 
@@ -121,7 +136,7 @@ class objetos_():
             self.pos_y = random.randint(50,100)
         
     def draw(self,tela):
-        pygame.draw.circle(tela,azul,(self.pos_x,self.pos_y),50)
+        tela.blit(self.sprite,(self.pos_x,self.pos_y))
 
 class obstaculos():
     def __init__(self,imagem,typo):
@@ -135,7 +150,7 @@ class obstaculos():
             obstaculos.pop()
             
     def draw(self,tela):
-        pygame.draw.circle(tela,azul,(self.pos_x,self.pos_y),50)
+        tela.blit(self.textura,(self.pos_x,self.pos_y))
 
 class obstaculo_curto(obstaculos):
     def __init__(self,image):
@@ -155,7 +170,7 @@ def main ():
     clock = pygame.time.Clock()
     player = runner()
     objs = objetos_()
-    obstaculo = obstaculos()
+    #obstaculo = obstaculos(carro,0)
     gamespeed = 14
     pos_x_bg = 0
     pos_y_bg = 400
@@ -193,8 +208,8 @@ def main ():
         player.update(tecla)
         objs.draw(tela)
         objs.update()
-        obstaculo.draw(tela)
-        obstaculo.update()
+        #obstaculo.draw(tela)
+        #obstaculo.update()
         placar()
         background()
         pygame.display.update()
