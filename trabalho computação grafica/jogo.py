@@ -24,7 +24,7 @@ pygame.image.load("pixil-frame-9.png"),
 pygame.image.load("pixil-frame-10.png"),
 pygame.image.load("pixil-frame-11.png"),]
 chao = pygame.image.load("grama123-atualizada-pixilart.png")
-carro = pygame.image.load("image-removebg-preview.png")
+carro = pygame.transform.scale((pygame.image.load("image-removebg-preview.png")),(100,100))
 #animações
 
 #base = [  pygame.image.load(os.path.join())  ]
@@ -39,8 +39,8 @@ class runner():
         #bases
         #self.NomeDaAnimacao = VariavelQueEstaOCaminhoDaImagem
         self.correrimg = corredorr
-        self.pularimg = [verde]
-        self.abaixarimg = [vermelho,azul]
+        self.pularimg = corredorr
+        self.abaixarimg = corredorr
         
         #self.NomeDaAnimacao = True ou False para deixa ativa quando inicia o jogo
         self.correndo = True
@@ -56,7 +56,7 @@ class runner():
         self.runner_CordX = self.pos_x
         
     def pular(self):
-        self.img = self.pularimg[self.step_index//10]
+        self.img = self.pularimg[self.step_index]
         #self.runner_Colision = self.image.get_rect()
         if self.pulando:
             self.runner_CordY -= self.velocidade_pulo * 4
@@ -66,13 +66,13 @@ class runner():
             self.pulando = False
         
     def abaixar(self):
-        self.img = self.abaixarimg[self.step_index//5]
+        self.img = self.abaixarimg[self.step_index]
         #self.runner_Colision = self.image.get_rect()
         self.runner_CordY = self.pos_y
         self.runner_CordX = self.pos_x
         self.step_index +=1
     def correr(self):
-        self.img = self.correrimg[self.step_index//5]
+        self.img = self.correrimg[self.step_index]
         #self.runner_Colision = self.image.get_rect()
         self.runner_CordY = self.pos_y_abaixado
         self.runner_CordX = self.pos_x
@@ -93,7 +93,7 @@ class runner():
             
             
             
-        if self.step_index >= 10:
+        if self.step_index >= 11:
             self.step_index = 0
             
                    
@@ -125,15 +125,15 @@ class objetos_():
     def __init__(self):
         self.sprite = carro
         self.pos_x = tela_Largura + random.randint(800,1000)
-        self.pos_y = random.randint(50,100)
+        self.pos_y = 400
         #self.text = 
-        self.width= 50
+        self.width= 0
         
     def update(self):
         self.pos_x -= gamespeed
         if self.pos_x <self.width:
             self.pos_x = tela_Largura + random.randint(2500,3000)
-            self.pos_y = random.randint(50,100)
+            self.pos_y = 400
         
     def draw(self,tela):
         tela.blit(self.sprite,(self.pos_x,self.pos_y))
@@ -173,25 +173,25 @@ def main ():
     #obstaculo = obstaculos(carro,0)
     gamespeed = 14
     pos_x_bg = 0
-    pos_y_bg = 400
+    pos_y_bg = 500
     pontos = 0
     font = pygame.font.Font('freesansbold.ttf', 20)
     def placar():
         global pontos, gamespeed
         pontos += 1
         if pontos % 100 == 0:
-            gamespeed +=1
+            gamespeed +=0.1
         text = font.render("pontuação: "+str(pontos), True,(0,0,0))
         textRect = text.get_rect()
         textRect.center = (1000,40)
         tela.blit(text,textRect)
     def background():
         global pos_x_bg, pos_y_bg
-        bg_width = 400 #usar o metodo get_width para definir isso
-        pygame.draw.rect(tela,verde,(pos_x_bg,pos_y_bg,400,400),)
-        pygame.draw.rect(tela,verde,(pos_x_bg + bg_width ,pos_y_bg,400,400),)
+        bg_width = chao.get_width() #usar o metodo get_width para definir isso
+        tela.blit(chao,(pos_x_bg,pos_y_bg))
+        tela.blit(chao,(pos_x_bg + bg_width ,pos_y_bg))
         if pos_x_bg <= -bg_width:
-            pygame.draw.rect(tela,verde,(pos_x_bg + bg_width ,pos_y_bg,400,400),)
+            tela.blit(chao,(pos_x_bg + bg_width ,pos_y_bg),)
             pos_x_bg  = 0
         pos_x_bg -= gamespeed
         
